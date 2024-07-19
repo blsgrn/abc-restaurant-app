@@ -1,4 +1,4 @@
-package com.balasegaran.AbcRestuarant;
+package com.balasegaran.AbcRestuarant.Controller;
 
 import com.balasegaran.AbcRestuarant.Model.User;
 import com.balasegaran.AbcRestuarant.Service.UserService;

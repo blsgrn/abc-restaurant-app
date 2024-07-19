@@ -1,7 +1,6 @@
 package com.balasegaran.AbcRestuarant.Repository;
 
 import com.balasegaran.AbcRestuarant.Model.User;
-
 import org.bson.types.ObjectId;
 import org.springframework.data.mongodb.repository.MongoRepository;
 import java.util.Optional;
