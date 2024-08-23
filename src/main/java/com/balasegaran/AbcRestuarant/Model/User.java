@@ -19,5 +19,6 @@ public class User {
   private String role;
   private String name;
   private String email;
+  private boolean subscribe;
   private String contactNumber;
 }

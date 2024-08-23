@@ -4,12 +4,14 @@ import com.balasegaran.AbcRestuarant.Model.Gallery;
 import com.balasegaran.AbcRestuarant.Repository.GalleryRepository;
 import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
 
 @Service
+@Scope("singleton")
 public class GalleryService {
 
   @Autowired
