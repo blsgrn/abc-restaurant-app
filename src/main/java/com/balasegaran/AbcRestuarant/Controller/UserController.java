@@ -4,6 +4,7 @@ import com.balasegaran.AbcRestuarant.Model.User;
 import com.balasegaran.AbcRestuarant.Service.UserService;
 import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -29,8 +30,13 @@ public class UserController {
   }
 
   @PostMapping
-  public User createUser(@RequestBody User user) {
-    return userService.createUser(user);
+  public ResponseEntity<?> createUser(@RequestBody User user) {
+    try {
+      User savedUser = userService.createUser(user);
+      return new ResponseEntity<>(savedUser, HttpStatus.CREATED);
+    } catch (IllegalArgumentException e) {
+      return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+    }
   }
 
   @PutMapping("/{id}")
