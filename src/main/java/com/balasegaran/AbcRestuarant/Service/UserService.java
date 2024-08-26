@@ -6,6 +6,7 @@ import com.balasegaran.AbcRestuarant.Validation.UserRegistration;
 import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -14,6 +15,8 @@ import java.util.Optional;
 @Service
 @Scope("singleton")
 public class UserService {
+
+  private BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
 
   @Autowired
   private UserRepository userRepository;
@@ -48,6 +51,7 @@ public class UserService {
     }
 
     validateUser(user);
+    user.setPassword(passwordEncoder.encode(user.getPassword()));
     return userRepository.save(user);
   }
 
@@ -73,4 +77,13 @@ public class UserService {
       throw new IllegalArgumentException("Invalid email address: Must be a valid email format.");
     }
   }
+
+  public Optional<User> authenticate(String username, String password) {
+    Optional<User> user = userRepository.findByUsername(username);
+    if (user.isPresent() && passwordEncoder.matches(password, user.get().getPassword())) {
+      return user;
+    }
+    return Optional.empty();
+  }
+
 }

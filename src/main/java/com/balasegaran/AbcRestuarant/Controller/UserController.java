@@ -44,6 +44,17 @@ public class UserController {
     }
   }
 
+  @PostMapping("/login")
+  public ResponseEntity<String> login(@RequestParam String username, @RequestParam String password) {
+    Optional<User> user = userService.authenticate(username, password);
+    if (user.isPresent()) {
+      // Here you could generate a JWT token or manage session
+      return ResponseEntity.ok("Login successful!");
+    } else {
+      return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid username or password.");
+    }
+  }
+
   @PutMapping("/{id}")
   public ResponseEntity<User> updateUser(@PathVariable ObjectId id, @RequestBody User userDetails) {
     Optional<User> existingUser = userService.getUserById(id);
