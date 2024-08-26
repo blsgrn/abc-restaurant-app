@@ -8,7 +8,7 @@ public class UserRegistrationTest {
 
   @Test
   public void testValidUsername() {
-    assertTrue(UserRegistration.isValidUsername("validUser123"));
+    assertTrue(UserRegistration.isValidUsername("john_doe1234"));
     assertFalse(UserRegistration.isValidUsername("in@validUser"));
     assertFalse(UserRegistration.isValidUsername(null));
   }
@@ -22,7 +22,7 @@ public class UserRegistrationTest {
 
   @Test
   public void testValidEmail() {
-    assertTrue(UserRegistration.isValidEmail("valid.email@example.com"));
+    assertTrue(UserRegistration.isValidEmail("john.doe123@example.com"));
     assertFalse(UserRegistration.isValidEmail("invalid-email"));
     assertFalse(UserRegistration.isValidEmail(null));
   }
@@ -37,7 +37,7 @@ public class UserRegistrationTest {
 
   @Test
   public void testValidContactNumber() {
-    assertTrue(UserRegistration.isValidContactNumber("1234567890"));
+    assertTrue(UserRegistration.isValidContactNumber("9876543210"));
     assertFalse(UserRegistration.isValidContactNumber("12345"));
     assertFalse(UserRegistration.isValidContactNumber("12345678901"));
     assertFalse(UserRegistration.isValidContactNumber(null));
