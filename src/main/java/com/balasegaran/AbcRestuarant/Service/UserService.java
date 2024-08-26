@@ -18,6 +18,14 @@ public class UserService {
   @Autowired
   private UserRepository userRepository;
 
+  public boolean isUsernameTaken(String username) {
+    return userRepository.findByUsername(username).isPresent();
+  }
+
+  public boolean isEmailTaken(String email) {
+    return userRepository.findByEmail(email).isPresent();
+  }
+
   public List<User> getAllUsers() {
     return userRepository.findAll();
   }
@@ -31,6 +39,14 @@ public class UserService {
   }
 
   public User createUser(User user) {
+    if (isUsernameTaken(user.getUsername())) {
+      throw new IllegalArgumentException("Username is already taken.");
+    }
+
+    if (isEmailTaken(user.getEmail())) {
+      throw new IllegalArgumentException("Email is already registered.");
+    }
+
     validateUser(user);
     return userRepository.save(user);
   }

@@ -5,6 +5,7 @@ import org.junit.jupiter.api.Test;
 import com.balasegaran.AbcRestuarant.Validation.UserRegistration;
 
 public class UserRegistrationTest {
+
   @Test
   public void testValidUsername() {
     assertTrue(UserRegistration.isValidUsername("validUser123"));
@@ -17,7 +18,6 @@ public class UserRegistrationTest {
     assertTrue(UserRegistration.isValidPassword("StrongP@aaw0rd"));
     assertFalse(UserRegistration.isValidPassword("weak"));
     assertFalse(UserRegistration.isValidPassword(null));
-
   }
 
   @Test
@@ -26,4 +26,35 @@ public class UserRegistrationTest {
     assertFalse(UserRegistration.isValidEmail("invalid-email"));
     assertFalse(UserRegistration.isValidEmail(null));
   }
+
+  @Test
+  public void testValidName() {
+    assertTrue(UserRegistration.isValidName("John Doe"));
+    assertFalse(UserRegistration.isValidName("J"));
+    assertFalse(UserRegistration.isValidName(null));
+    assertFalse(UserRegistration.isValidName("John123"));
+  }
+
+  @Test
+  public void testValidContactNumber() {
+    assertTrue(UserRegistration.isValidContactNumber("1234567890"));
+    assertFalse(UserRegistration.isValidContactNumber("12345"));
+    assertFalse(UserRegistration.isValidContactNumber("12345678901"));
+    assertFalse(UserRegistration.isValidContactNumber(null));
+    assertFalse(UserRegistration.isValidContactNumber("123abc7890"));
+  }
+
+  @Test
+  public void testValidSubscription() {
+    // Customer subscribing should be valid
+    assertTrue(UserRegistration.isValidSubscription("Customer", true));
+
+    // Admin subscribing should not be valid
+    assertFalse(UserRegistration.isValidSubscription("Admin", true));
+
+    // Staff subscribing should not be valid
+    assertFalse(UserRegistration.isValidSubscription("Staff", true));
+
+  }
+
 }

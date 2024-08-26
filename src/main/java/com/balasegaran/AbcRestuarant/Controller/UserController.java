@@ -10,6 +10,8 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 @RestController
 @RequestMapping("/users")
@@ -17,6 +19,8 @@ public class UserController {
 
   @Autowired
   private UserService userService;
+
+  private static final Logger LOGGER = Logger.getLogger(UserController.class.getName());
 
   @GetMapping
   public List<User> getAllUsers() {
@@ -35,19 +39,30 @@ public class UserController {
       User savedUser = userService.createUser(user);
       return new ResponseEntity<>(savedUser, HttpStatus.CREATED);
     } catch (IllegalArgumentException e) {
+      LOGGER.log(Level.SEVERE, "Error creating user", e);
       return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
     }
   }
 
   @PutMapping("/{id}")
   public ResponseEntity<User> updateUser(@PathVariable ObjectId id, @RequestBody User userDetails) {
-    Optional<User> updatedUser = Optional.ofNullable(userService.updateUser(id, userDetails));
-    return updatedUser.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
+    Optional<User> existingUser = userService.getUserById(id);
+    if (existingUser.isPresent()) {
+      User updatedUser = userService.updateUser(id, userDetails);
+      return ResponseEntity.ok(updatedUser);
+    } else {
+      return ResponseEntity.notFound().build();
+    }
   }
 
   @DeleteMapping("/{id}")
   public ResponseEntity<Void> deleteUser(@PathVariable ObjectId id) {
-    userService.deleteUser(id);
-    return ResponseEntity.ok().build();
+    Optional<User> existingUser = userService.getUserById(id);
+    if (existingUser.isPresent()) {
+      userService.deleteUser(id);
+      return ResponseEntity.ok().build();
+    } else {
+      return ResponseEntity.notFound().build();
+    }
   }
 }
