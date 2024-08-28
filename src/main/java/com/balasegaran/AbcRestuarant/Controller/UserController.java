@@ -1,13 +1,17 @@
 package com.balasegaran.AbcRestuarant.Controller;
 
 import com.balasegaran.AbcRestuarant.Model.User;
+import com.balasegaran.AbcRestuarant.Security.JwtUtil;
 import com.balasegaran.AbcRestuarant.Service.UserService;
 import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import com.balasegaran.AbcRestuarant.Model.LoginRequest;
 
+import java.util.HashMap;
+import java.util.Map;
 import java.util.List;
 import java.util.Optional;
 import java.util.logging.Level;
@@ -28,7 +32,18 @@ public class UserController {
   }
 
   @GetMapping("/{id}")
-  public ResponseEntity<User> getUserById(@PathVariable ObjectId id) {
+  public ResponseEntity<User> getUserById(@PathVariable ObjectId id,
+      @RequestHeader(value = "Authorization", required = false) String token) {
+    // If token is provided, validate it
+    if (token != null && token.startsWith("Bearer ")) {
+      String jwtToken = token.substring(7); // Remove "Bearer " from the token
+      String username = JwtUtil.extractClaims(jwtToken).getSubject();
+
+      if (!JwtUtil.validateToken(jwtToken, username)) {
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+      }
+    }
+
     Optional<User> user = userService.getUserById(id);
     return user.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
   }
@@ -45,24 +60,26 @@ public class UserController {
   }
 
   @PostMapping("/login")
-  public ResponseEntity<String> login(@RequestParam String username, @RequestParam String password) {
-    Optional<User> user = userService.authenticate(username, password);
-    if (user.isPresent()) {
-      // Here you could generate a JWT token or manage session
-      return ResponseEntity.ok("Login successful!");
-    } else {
-      return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid username or password.");
-    }
-  }
+  public ResponseEntity<Map<String, String>> login(@RequestBody LoginRequest loginRequest) {
+    LOGGER.info("Login attempt with username: " + loginRequest.getUsername());
+    try {
+      Optional<User> user = userService.authenticate(loginRequest.getUsername(), loginRequest.getPassword());
+      if (user.isPresent()) {
+        // Generate JWT token
+        String token = JwtUtil.generateToken(loginRequest.getUsername());
 
-  @PutMapping("/{id}")
-  public ResponseEntity<User> updateUser(@PathVariable ObjectId id, @RequestBody User userDetails) {
-    Optional<User> existingUser = userService.getUserById(id);
-    if (existingUser.isPresent()) {
-      User updatedUser = userService.updateUser(id, userDetails);
-      return ResponseEntity.ok(updatedUser);
-    } else {
-      return ResponseEntity.notFound().build();
+        // Return the token as a JSON object
+        Map<String, String> response = new HashMap<>();
+        response.put("token", token);
+
+        return ResponseEntity.ok(response);
+      } else {
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(Map.of("message", "Invalid username or password."));
+      }
+    } catch (Exception e) {
+      LOGGER.log(Level.SEVERE, "Error during login", e);
+      return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+          .body(Map.of("message", "An internal error occurred."));
     }
   }
 
