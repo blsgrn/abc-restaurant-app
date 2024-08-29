@@ -68,9 +68,15 @@ public class UserController {
         // Generate JWT token
         String token = JwtUtil.generateToken(loginRequest.getUsername());
 
-        // Return the token as a JSON object
+        // Extract the user's role
+        String role = user.get().getRole();
+        String name = user.get().getName();
+
+        // Return the token and role as a JSON object
         Map<String, String> response = new HashMap<>();
         response.put("token", token);
+        response.put("role", role);
+        response.put("name", name);
 
         return ResponseEntity.ok(response);
       } else {
