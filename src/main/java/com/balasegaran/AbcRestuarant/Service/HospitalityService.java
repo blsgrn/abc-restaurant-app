@@ -2,16 +2,15 @@ package com.balasegaran.AbcRestuarant.Service;
 
 import com.balasegaran.AbcRestuarant.Model.Hospitality;
 import com.balasegaran.AbcRestuarant.Repository.HospitalityRepository;
+import com.balasegaran.AbcRestuarant.Validation.HospitalityValidator;
 import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
 
 @Service
-@Scope("singleton")
 public class HospitalityService {
 
     @Autowired
@@ -26,12 +25,24 @@ public class HospitalityService {
     }
 
     public Hospitality createHospitality(Hospitality hospitality) {
+        // Validate the hospitality object before saving
+        HospitalityValidator.validate(hospitality);
         return hospitalityRepository.save(hospitality);
     }
 
     public Hospitality updateHospitality(ObjectId id, Hospitality hospitalityDetails) {
-        hospitalityDetails.setId(id);
-        return hospitalityRepository.save(hospitalityDetails);
+        // Validate the hospitality object before updating
+        HospitalityValidator.validate(hospitalityDetails);
+
+        return hospitalityRepository.findById(id)
+                .map(existingHospitality -> {
+                    existingHospitality.setName(hospitalityDetails.getName());
+                    existingHospitality.setDescription(hospitalityDetails.getDescription());
+                    existingHospitality.setPrice(hospitalityDetails.getPrice());
+                    existingHospitality.setCategory(hospitalityDetails.getCategory());
+                    existingHospitality.setImageUrl(hospitalityDetails.getImageUrl());
+                    return hospitalityRepository.save(existingHospitality);
+                }).orElseThrow(() -> new IllegalArgumentException("Hospitality not found"));
     }
 
     public void deleteHospitality(ObjectId id) {
