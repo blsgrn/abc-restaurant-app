@@ -21,6 +21,10 @@ public class QueryService {
     return queryRepository.findAll();
   }
 
+  public List<Query> getQueriesByUserId(String userId) {
+    return queryRepository.findByUserId(userId);
+  }
+
   public Optional<Query> getQueryById(ObjectId id) {
     return queryRepository.findById(id);
   }

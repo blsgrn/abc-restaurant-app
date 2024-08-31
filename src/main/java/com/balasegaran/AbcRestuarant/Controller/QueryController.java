@@ -18,8 +18,12 @@ public class QueryController {
   private QueryService queryService;
 
   @GetMapping
-  public List<Query> getAllQueries() {
-    return queryService.getAllQueries();
+  public List<Query> getQueries(@RequestParam(required = false) String userId) {
+    if (userId != null) {
+      return queryService.getQueriesByUserId(userId);
+    } else {
+      return queryService.getAllQueries();
+    }
   }
 
   @GetMapping("/{id}")
