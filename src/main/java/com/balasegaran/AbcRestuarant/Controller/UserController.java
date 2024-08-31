@@ -101,4 +101,19 @@ public class UserController {
       return ResponseEntity.notFound().build();
     }
   }
+
+  @PutMapping("/{id}")
+  public ResponseEntity<User> updateUser(@PathVariable ObjectId id, @RequestBody User userDetails) {
+    try {
+      Optional<User> existingUser = userService.getUserById(id);
+      if (existingUser.isPresent()) {
+        User updatedUser = userService.updateUser(id, userDetails);
+        return ResponseEntity.ok(updatedUser);
+      } else {
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+      }
+    } catch (Exception e) {
+      return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
+    }
+  }
 }
