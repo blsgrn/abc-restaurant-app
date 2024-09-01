@@ -54,4 +54,9 @@ public class HospitalityController {
         .orElseGet(() -> ResponseEntity.notFound().build());
   }
 
+  @GetMapping("/search")
+  public List<Hospitality> searchHospitalities(@RequestParam String query) {
+    return hospitalityService.searchHospitalities(query);
+  }
+
 }

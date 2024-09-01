@@ -48,4 +48,11 @@ public class HospitalityService {
     public void deleteHospitality(ObjectId id) {
         hospitalityRepository.deleteById(id);
     }
+
+    public List<Hospitality> searchHospitalities(String query) {
+        // Implement the search across name, description, and category
+        return hospitalityRepository
+                .findByNameContainingIgnoreCaseOrDescriptionContainingIgnoreCaseOrCategoryContainingIgnoreCase(query,
+                        query, query);
+    }
 }
