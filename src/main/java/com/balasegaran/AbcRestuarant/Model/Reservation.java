@@ -21,6 +21,8 @@ public class Reservation {
     private String serviceId;
     private Date date;
     private String time;
+    private Integer noOfGuests;
+    private String specialRequests;
     private String status;
     private String type;
 }
