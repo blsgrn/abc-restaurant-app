@@ -17,12 +17,18 @@ public class Reservation {
     @Id
     private ObjectId id;
     private String userId;
+    private String userName;
     private String restaurantId;
     private String serviceId;
+    private double serviceCharge;
     private Date date;
     private String time;
     private Integer noOfGuests;
     private String specialRequests;
-    private String status;
     private String type;
+    // Fields with default values
+    private double diningPrice = 4800.0;
+    private double deliveryPrice = 800.0;
+    private double specialRequestCharge = 1000.0;
+    private String status = "Pending";
 }
