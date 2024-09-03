@@ -26,7 +26,7 @@ public class Reservation {
     private Integer noOfGuests;
     private String specialRequests;
     private String type;
-    // Fields with default values
+    // Fields with default values that can updated by staff in frontend
     private double diningPrice = 4800.0;
     private double deliveryPrice = 800.0;
     private double specialRequestCharge = 1000.0;

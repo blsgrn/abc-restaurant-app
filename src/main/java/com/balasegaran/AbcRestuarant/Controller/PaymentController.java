@@ -28,6 +28,12 @@ public class PaymentController {
     return payment.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
   }
 
+  @GetMapping("/reservation/{reservationId}")
+  public ResponseEntity<Payment> getLatestPaymentByReservationId(@PathVariable String reservationId) {
+    Optional<Payment> payment = paymentService.getLatestPaymentByReservationId(reservationId);
+    return payment.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
+  }
+
   @PostMapping
   public Payment createPayment(@RequestBody Payment payment) {
     return paymentService.createPayment(payment);

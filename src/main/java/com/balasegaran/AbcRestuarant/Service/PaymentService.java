@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Service;
 
+import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
 
@@ -37,4 +38,15 @@ public class PaymentService {
   public void deletePayment(ObjectId id) {
     paymentRepository.deleteById(id);
   }
+
+  public Optional<Payment> getLatestPaymentByReservationId(String reservationId) {
+    List<Payment> payments = paymentRepository.findByReservationId(reservationId);
+    if (payments.isEmpty()) {
+      return Optional.empty();
+    }
+
+    return payments.stream()
+        .max(Comparator.comparing(Payment::getDate));
+  }
+
 }
