@@ -18,6 +18,7 @@ public class Reservation {
     private ObjectId id;
     private String userId;
     private String userName;
+    private String userEmail;
     private String restaurantId;
     private String serviceId;
     private double serviceCharge;

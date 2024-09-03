@@ -72,6 +72,7 @@ public class UserController {
         String role = user.get().getRole();
         String name = user.get().getName();
         String id = user.get().getId().toString();
+        String email = user.get().getEmail();
 
         // Return the token and role as a JSON object
         Map<String, String> response = new HashMap<>();
@@ -79,6 +80,7 @@ public class UserController {
         response.put("role", role);
         response.put("name", name);
         response.put("id", id);
+        response.put("email", email);
 
         return ResponseEntity.ok(response);
       } else {
