@@ -9,9 +9,7 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-
 public class PaymentReport {
-  private String period;
+  private String _id;
   private double totalAmount;
-  private long paymentCount;
 }
