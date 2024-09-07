@@ -21,4 +21,5 @@ public class Query {
   private String response;
   private String status;
   private Date date;
+  private Date responseDate;
 }

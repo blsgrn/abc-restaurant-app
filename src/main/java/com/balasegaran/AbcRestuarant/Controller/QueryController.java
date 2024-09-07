@@ -7,7 +7,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 @RestController
@@ -47,5 +49,23 @@ public class QueryController {
   public ResponseEntity<Void> deleteQuery(@PathVariable ObjectId id) {
     queryService.deleteQuery(id);
     return ResponseEntity.ok().build();
+  }
+
+  @GetMapping("/analysis")
+  public ResponseEntity<Map<String, Object>> getQueryAnalysisReport() {
+    Map<String, Object> report = new HashMap<>();
+    try {
+      report.put("totalQueries", queryService.getTotalQueries());
+      report.put("averageResponseTime", queryService.getAverageResponseTime());
+      report.put("pendingQueries", queryService.getCountPendingQueries());
+      report.put("resolvedQueries", queryService.getCountResolvedQueries());
+      report.put("recentQueries", queryService.getRecentQueries(10)); // Adjust the number as needed
+      report.put("statusBreakdown", queryService.getStatusBreakdown()); // Add this line
+
+      return ResponseEntity.ok(report);
+    } catch (Exception e) {
+      e.printStackTrace();
+      return ResponseEntity.status(500).body(null);
+    }
   }
 }
