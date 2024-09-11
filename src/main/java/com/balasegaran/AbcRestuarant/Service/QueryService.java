@@ -50,28 +50,22 @@ public class QueryService {
     // Get all queries with status "Closed"
     List<Query> respondedQueries = queryRepository.findByStatus("Closed");
 
-    // Initialize variables for total response time and count of queries
     long totalResponseTime = 0;
     int count = 0;
 
-    // Iterate over each responded query
     for (Query query : respondedQueries) {
-      // Ensure the response date is not null
+
       if (query.getResponseDate() != null) {
-        // Calculate the response time in milliseconds
+
         long responseTimeMillis = query.getResponseDate().getTime() - query.getDate().getTime();
 
-        // Convert milliseconds to minutes
         long responseTimeMinutes = responseTimeMillis / (1000 * 60);
 
-        // Accumulate total response time and increment count
         totalResponseTime += responseTimeMinutes;
         count++;
       }
     }
 
-    // Return the average response time in minutes
-    // If no queries, return 0 to avoid division by zero
     return count == 0 ? 0 : totalResponseTime / (double) count;
   }
 

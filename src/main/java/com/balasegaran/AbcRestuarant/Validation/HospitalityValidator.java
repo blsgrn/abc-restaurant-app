@@ -7,11 +7,9 @@ import java.util.regex.Pattern;
 
 public class HospitalityValidator {
 
-  // Regular expression to validate URLs
   private static final String URL_REGEX = "^(http|https)://.*|^/.*$";
   private static final Pattern URL_PATTERN = Pattern.compile(URL_REGEX);
 
-  // Validate method to check if the Hospitality object is valid
   public static void validate(Hospitality hospitality) {
     if (hospitality.getName() == null || hospitality.getName().trim().isEmpty()) {
       throw new IllegalArgumentException("Name cannot be null or empty");

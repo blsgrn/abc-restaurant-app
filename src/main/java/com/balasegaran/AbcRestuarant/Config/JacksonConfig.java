@@ -12,7 +12,6 @@ public class JacksonConfig {
   @Bean
   public Module objectIdModule() {
     SimpleModule module = new SimpleModule();
-    // Ensure the ObjectId class and ObjectIdSerializer are used correctly
     module.addSerializer(ObjectId.class, new ObjectIdSerializer());
     return module;
   }

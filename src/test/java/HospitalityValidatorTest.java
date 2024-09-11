@@ -12,7 +12,7 @@ class HospitalityValidatorTest {
   void testValidHospitality() {
     Hospitality hospitality = new Hospitality(new ObjectId(), "Valid Name", "Valid Description", 9.99, "Category",
         "http://example.com/image.jpg");
-    // This should pass without exceptions
+
     HospitalityValidator.validate(hospitality);
   }
 
@@ -20,7 +20,7 @@ class HospitalityValidatorTest {
   void testInvalidName() {
     Hospitality hospitality = new Hospitality(new ObjectId(), "", "Valid Description", 9.99, "Category",
         "http://example.com/image.jpg");
-    // This should throw an IllegalArgumentException
+
     assertThrows(IllegalArgumentException.class, () -> HospitalityValidator.validate(hospitality));
   }
 
@@ -28,7 +28,7 @@ class HospitalityValidatorTest {
   void testInvalidPrice() {
     Hospitality hospitality = new Hospitality(new ObjectId(), "Valid Name", "Valid Description", -1.00, "Category",
         "http://example.com/image.jpg");
-    // This should throw an IllegalArgumentException
+
     assertThrows(IllegalArgumentException.class, () -> HospitalityValidator.validate(hospitality));
   }
 
@@ -36,7 +36,7 @@ class HospitalityValidatorTest {
   void testInvalidImageUrl() {
     Hospitality hospitality = new Hospitality(new ObjectId(), "Valid Name", "Valid Description", 9.99, "Category",
         "invalid-url");
-    // This should throw an IllegalArgumentException
+
     assertThrows(IllegalArgumentException.class, () -> HospitalityValidator.validate(hospitality));
   }
 }

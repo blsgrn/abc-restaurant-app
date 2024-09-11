@@ -25,13 +25,13 @@ public class HospitalityService {
     }
 
     public Hospitality createHospitality(Hospitality hospitality) {
-        // Validate the hospitality object before saving
+
         HospitalityValidator.validate(hospitality);
         return hospitalityRepository.save(hospitality);
     }
 
     public Hospitality updateHospitality(ObjectId id, Hospitality hospitalityDetails) {
-        // Validate the hospitality object before updating
+
         HospitalityValidator.validate(hospitalityDetails);
 
         return hospitalityRepository.findById(id)
@@ -50,7 +50,7 @@ public class HospitalityService {
     }
 
     public List<Hospitality> searchHospitalities(String query) {
-        // Implement the search across name, description, and category
+
         return hospitalityRepository
                 .findByNameContainingIgnoreCaseOrDescriptionContainingIgnoreCaseOrCategoryContainingIgnoreCase(query,
                         query, query);

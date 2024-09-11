@@ -34,9 +34,9 @@ public class UserController {
   @GetMapping("/{id}")
   public ResponseEntity<User> getUserById(@PathVariable ObjectId id,
       @RequestHeader(value = "Authorization", required = false) String token) {
-    // If token is provided, validate it
+
     if (token != null && token.startsWith("Bearer ")) {
-      String jwtToken = token.substring(7); // Remove "Bearer " from the token
+      String jwtToken = token.substring(7);
       String username = JwtUtil.extractClaims(jwtToken).getSubject();
 
       if (!JwtUtil.validateToken(jwtToken, username)) {
@@ -65,16 +65,14 @@ public class UserController {
     try {
       Optional<User> user = userService.authenticate(loginRequest.getUsername(), loginRequest.getPassword());
       if (user.isPresent()) {
-        // Generate JWT token
+
         String token = JwtUtil.generateToken(loginRequest.getUsername());
 
-        // Extract the user's id, name and role
         String role = user.get().getRole();
         String name = user.get().getName();
         String id = user.get().getId().toString();
         String email = user.get().getEmail();
 
-        // Return the token and role as a JSON object
         Map<String, String> response = new HashMap<>();
         response.put("token", token);
         response.put("role", role);

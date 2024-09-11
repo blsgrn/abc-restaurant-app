@@ -8,7 +8,7 @@ import org.bson.types.ObjectId;
 import org.springframework.data.mongodb.repository.MongoRepository;
 
 public interface HospitalityRepository extends MongoRepository<Hospitality, ObjectId> {
-  // Custom search query across name, description, and category
+
   List<Hospitality> findByNameContainingIgnoreCaseOrDescriptionContainingIgnoreCaseOrCategoryContainingIgnoreCase(
       String name, String description, String category);
 }

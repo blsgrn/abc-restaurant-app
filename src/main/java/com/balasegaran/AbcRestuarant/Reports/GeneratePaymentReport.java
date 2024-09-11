@@ -13,44 +13,41 @@ import java.util.List;
 @Service
 public class GeneratePaymentReport {
 
-  @Autowired
-  private MongoTemplate mongoTemplate;
+    @Autowired
+    private MongoTemplate mongoTemplate;
 
-  public List<PaymentReport> getDailyPayments() {
-    Aggregation aggregation = Aggregation.newAggregation(
-        // Stage 1: Project the formatted date and amount fields
-        Aggregation.project()
-            .and(DateOperators.DateToString.dateOf("date").toString("%Y-%m-%d")).as("formattedDate")
-            .and("amount").as("amount"),
+    public List<PaymentReport> getDailyPayments() {
+        Aggregation aggregation = Aggregation.newAggregation(
 
-        // Stage 2: Group by formattedDate and sum amounts
-        Aggregation.group("formattedDate")
-            .sum("amount").as("totalAmount"),
+                Aggregation.project()
+                        .and(DateOperators.DateToString.dateOf("date").toString("%Y-%m-%d")).as("formattedDate")
+                        .and("amount").as("amount"),
 
-        // Stage 3: Rename _id to date and include totalAmount
-        Aggregation.project("totalAmount")
-            .and("_id").as("date"),
+                Aggregation.group("formattedDate")
+                        .sum("amount").as("totalAmount"),
 
-        // Stage 4: Sort by date
-        Aggregation.sort(Sort.by(Sort.Order.asc("date"))));
+                Aggregation.project("totalAmount")
+                        .and("_id").as("date"),
 
-    AggregationResults<PaymentReport> results = mongoTemplate.aggregate(aggregation, "payments", PaymentReport.class);
+                Aggregation.sort(Sort.by(Sort.Order.asc("date"))));
 
-    // Debug logging
-    List<PaymentReport> mappedResults = results.getMappedResults();
-    mappedResults.forEach(
-        report -> System.out.println("Date: " + ", Total Amount: " + report.getTotalAmount()));
+        AggregationResults<PaymentReport> results = mongoTemplate.aggregate(aggregation, "payments",
+                PaymentReport.class);
 
-    return mappedResults;
-  }
+        List<PaymentReport> mappedResults = results.getMappedResults();
+        mappedResults.forEach(
+                report -> System.out.println("Date: " + ", Total Amount: " + report.getTotalAmount()));
 
-  public List<PaymentStatusResult> getStatusBreakdown() {
-    Aggregation aggregation = Aggregation.newAggregation(
-        Aggregation.group("status").count().as("count"),
-        Aggregation.sort(Sort.by(Sort.Order.asc("_id"))));
+        return mappedResults;
+    }
 
-    AggregationResults<PaymentStatusResult> results = mongoTemplate.aggregate(aggregation, "payments",
-        PaymentStatusResult.class);
-    return results.getMappedResults();
-  }
+    public List<PaymentStatusResult> getStatusBreakdown() {
+        Aggregation aggregation = Aggregation.newAggregation(
+                Aggregation.group("status").count().as("count"),
+                Aggregation.sort(Sort.by(Sort.Order.asc("_id"))));
+
+        AggregationResults<PaymentStatusResult> results = mongoTemplate.aggregate(aggregation, "payments",
+                PaymentStatusResult.class);
+        return results.getMappedResults();
+    }
 }

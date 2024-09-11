@@ -46,10 +46,9 @@ public class ReservationController {
 
   @PostMapping
   public ResponseEntity<Reservation> createReservation(@RequestBody Reservation reservation) {
-    // Create the reservation
+
     Reservation createdReservation = reservationService.createReservation(reservation);
 
-    // Return the created reservation without creating a payment
     return ResponseEntity.ok(createdReservation);
   }
 
@@ -65,10 +64,8 @@ public class ReservationController {
 
     Reservation updatedReservation = updatedReservationOpt.get();
 
-    // Calculate the payment amount
     double totalAmount = calculateTotalAmount(updatedReservation);
 
-    // Create or update the payment
     Payment payment = new Payment();
     payment.setReservationId(updatedReservation.getId().toString());
     payment.setAmount(totalAmount);
